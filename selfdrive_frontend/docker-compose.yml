@@ -1,0 +1,39 @@
+version: "3"
+
+services:
+  traefik:
+    image: traefik:v3  # ตรวจสอบเวอร์ชันให้แน่ใจว่าใช้งานได้
+    command:
+      - --api.insecure=true
+      - --providers.docker
+      - --entrypoints.web.address=:80
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - frontend
+
+  react-app:
+    build:
+      context: .
+    volumes:
+      - ./src:/app/src  # เชื่อมต่อโฟลเดอร์ src
+      - ./public:/app/public  # เชื่อมต่อโฟลเดอร์ public
+    ports:
+      - "3000:3000"  # เปิดพอร์ต 3000 สำหรับ React
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.react-app.rule=Host(`localhost`) || Host(`89.213.177.84`) || Host(`127.0.0.1`) || Host(`yourdomain.com`)"
+      - "traefik.http.routers.react-app.entrypoints=web"
+      - "traefik.http.services.react-app-service.loadbalancer.server.port=3000"
+    command: npm start  # รัน React app ในโหมด development โดยใช้ npm start
+    depends_on:
+      - traefik
+    networks:
+      - frontend
+
+networks:
+  frontend:
+    driver: bridge
