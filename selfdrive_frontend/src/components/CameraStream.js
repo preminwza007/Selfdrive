@@ -1,5 +1,7 @@
+// src/components/CameraStream.js
+
 import React, { useEffect, useState } from "react";
-import { Card, CardBody, CardHeader } from "reactstrap";
+import { Card, CardBody } from "reactstrap";
 
 const CameraStream = () => {
   const [imageSrc, setImageSrc] = useState(null);
@@ -12,7 +14,6 @@ const CameraStream = () => {
     };
 
     socket.onmessage = (event) => {
-      // รับ base64 image ที่ส่งมาจาก Pi ผ่าน FastAPI
       const base64Image = event.data;
 
       // ต้องเป็น base64 ที่มี prefix แล้ว เช่น: data:image/jpeg;base64,...
@@ -38,23 +39,27 @@ const CameraStream = () => {
     <Card
       className="shadow"
       style={{
-        position: "absolute",   // ให้กล้องอยู่ในตำแหน่งที่แน่นอน
-        top: "-730px",            // ระยะห่างจากขอบบน
-        left: "100px",           // ระยะห่างจากขอบซ้าย
-        width: "1100px",         // ขนาดกล้องที่ใหญ่ขึ้น
-        height: "300px",        // ความสูงของกล้อง
-        zIndex: 100,            // ให้กล้องอยู่ในตำแหน่งบนสุด
+        width: "100%",
+        height: "100%",
+        zIndex: 100,
+        backgroundColor: "#000", // ทำให้พื้นหลังกล้องเป็นสีดำ
+        borderRadius: "15px", // ทำให้ขอบของกล้องมน
+        overflow: "hidden", // ซ่อนเนื้อหาที่เกินขอบ
       }}
     >
-      <CardBody className="text-center">
+      <CardBody className="text-center" style={{ height: "100%" }}>
         {imageSrc ? (
           <img
             src={imageSrc}
             alt="Live Stream"
-            style={{ width: "100%", height: "auto", borderRadius: "12px" }}
+            style={{
+              width: "100%", // ขยายให้เต็มขนาดของกล่อง
+              height: "80%",
+              borderRadius: "15px", // ขอบมนที่ภาพ
+            }}
           />
         ) : (
-          <p>🔄 Waiting for stream...</p>
+          <p style={{ color: "white", fontSize: "20px" }}>🔄 Waiting for stream...</p>
         )}
       </CardBody>
     </Card>

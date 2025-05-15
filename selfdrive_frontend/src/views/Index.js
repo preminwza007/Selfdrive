@@ -1,28 +1,9 @@
-/*!
+// src/components/Index.js
 
-=========================================================
-* Argon Dashboard React - v1.2.4
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/argon-dashboard-react
-* Copyright 2024 Creative Tim (https://www.creative-tim.com)
-* Licensed under MIT (https://github.com/creativetimofficial/argon-dashboard-react/blob/master/LICENSE.md)
-
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
 import { useState } from "react";
-// node.js library that concatenates classes (strings)
 import classnames from "classnames";
-// javascript plugin for creating charts
 import Chart from "chart.js";
-// react plugin used to create charts
 import { Line, Bar } from "react-chartjs-2";
-// reactstrap components
 import {
   Button,
   Card,
@@ -48,6 +29,7 @@ import {
 
 import Header from "components/Headers/Header.js";
 import CameraStream from "components/CameraStream.js"; // ✅ import component ที่เราสร้าง
+import MapComponent from "components/MapComponent";  // ✅ import MapComponent ที่เราสร้าง
 
 const Index = (props) => {
   const [activeNav, setActiveNav] = useState(1);
@@ -67,21 +49,72 @@ const Index = (props) => {
     <>
       <Header />
       <Container className="mt--7" fluid>
-        <Row>
-          <Col xl="12">
-            {/* สามารถเพิ่ม chart หรือ component อื่นได้ตรงนี้ */}
+        {/* ใช้ position absolute เพื่อให้กล้องและแผนที่อยู่ด้านบนสุดของหน้าเว็บ */}
+        <Row className="mt--10" style={{
+          position: "absolute", // ให้ทั้งสองคอมโพเนนต์อยู่เหนือ Container
+          top: "0", // ตั้งให้เริ่มต้นจากด้านบนสุดของหน้า
+          left: "0", // เริ่มจากด้านซ้ายสุดของหน้า
+          width: "100%", // ให้ใช้พื้นที่เต็มความกว้างของหน้าจอ
+          display: "flex",
+          alignItems: "stretch", // ให้ทั้งสองคอลัมน์มีความสูงเท่ากัน
+        }}>
+          {/* กล้อง */}
+          <Col xl="9" style={{ paddingRight: "10px", display: "flex", alignItems: "stretch" }}>
+            {/* เพิ่มความยาวในแนวนอนให้กล้อง */}
+            <Card style={{
+              width: "100%",
+              height: "100%",
+              borderRadius: "15px", // เพิ่มขอบมนที่ Card
+              overflow: "hidden"  // ซ่อนเนื้อหาที่เกินจากขอบ
+            }}>
+              <CardHeader>
+                <h3 className="mb-0"></h3>
+              </CardHeader>
+              <CardBody style={{
+                height: "100%",
+                borderRadius: "15px", // เพิ่มขอบมนให้กับ CardBody
+                overflow: "hidden", // ซ่อนเนื้อหาที่เกินขอบ
+              }}>
+                <div style={{
+                  width: "100%",  // ขยายให้เต็มที่ของ container
+                  height: "100%", // ทำให้กล้องยาวเต็มขนาดพื้นที่
+                  maxWidth: "100%",  // จำกัดความกว้างไม่ให้เกินขนาดของ container
+                  maxHeight: "100%",  // จำกัดความสูงไม่เกินขนาดของ container
+                  flexGrow: 1,   // ให้กล้องยืดเต็มพื้นที่ที่เหลือ
+                  borderRadius: "15px", // เพิ่มขอบมนที่ Card
+                  overflow: "hidden",  // ซ่อนเนื้อหาที่เกินออกจากขอบ
+                }}>
+                  <CameraStream />
+                </div>
+              </CardBody>
+            </Card>
+          </Col>
+
+          {/* แผนที่ */}
+          <Col xl="3" style={{ display: "flex", alignItems: "stretch" }}>
+            <Card style={{
+              width: "100%",
+              height: "100%",
+              borderRadius: "15px", // เพิ่มขอบมนที่แผนที่
+              overflow: "hidden"  // ซ่อนเนื้อหาที่เกินจากขอบ
+            }}>
+              <CardHeader>
+                <h3 className="mb-0"></h3>
+              </CardHeader>
+              <CardBody style={{
+                height: "100%",
+                borderRadius: "15px", // เพิ่มขอบมนให้กับ CardBody
+                overflow: "hidden", // ซ่อนเนื้อหาที่เกินขอบ
+              }}>
+                <MapComponent />
+              </CardBody>
+            </Card>
           </Col>
         </Row>
-        <Row className="mt--10">
-          <Col className="mb-5 mb-xl-0" xl="8">
-            {/* ✅ กล้อง Live จาก Pi */}
-            <CameraStream />
-          </Col>
-        </Row>
+
       </Container>
     </>
   );
 };
 
 export default Index;
-
